@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require("express");
 const app = express();
 
@@ -19,11 +21,11 @@ app.get("/api/users", (req, res) => {
 
 app.get("/api/users/:id", (req, res) => {
   const id = req.params.id
-  const user = users.filter((item) => item.id == id)
-  if( user.length < 1){
+  const index = users.findIndex((item) => item.id == id)
+  if( index < 0){
     res.send(`Пользователя с id ${id} не существует!`)
   }
-  res.send( user[0]);
+  res.send( users[index]);
 });
 
 app.post("/api/users", (req, res) => {
@@ -63,7 +65,9 @@ app.delete("/api/users/:id", (req, res) => {
   res.send("Пользователь удален!")
 });
 
-const PORT = 3000;
+const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Сервер запущен на http://localhost:${PORT}`);
 });
+
+
