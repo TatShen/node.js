@@ -21,11 +21,11 @@ app.get("/api/users", (req, res) => {
 
 app.get("/api/users/:id", (req, res) => {
   const id = req.params.id
-  const index = users.findIndex((item) => item.id == id)
-  if( index < 0){
+  const user = users.find((item) => item.id == id)
+  if( user.length < 1){
     res.send(`Пользователя с id ${id} не существует!`)
   }
-  res.send( users[index]);
+  res.send( user);
 });
 
 app.post("/api/users", (req, res) => {
