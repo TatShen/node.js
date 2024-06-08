@@ -12,7 +12,7 @@ class UserServices {
   }
 
   async getUser(id) {
-    await this.getData();
+    await this.getUsers();
     const user = this.#data.users.find((item) => item.id == id);
     return user ? user : `Пользователь с id ${id} не найден!`;
   }
