@@ -1,39 +1,45 @@
+const writeFile = require("../utils/file");
+
+const dataService = require("./dataServices");
+
 class UserServices {
-  #users = [];
-  getUsers() {
-    return this.#users;
+  #data;
+
+  async getUsers() {
+    const data = await dataService.getData();
+    this.#data = JSON.parse(data);
+    return this.#data.users;
   }
-  getUser(id) {
-    const user = this.#users.find((item) => item.id == id);
+
+  async getUser(id) {
+    await this.getData();
+    const user = this.#data.users.find((item) => item.id == id);
     return user ? user : `Пользователь с id ${id} не найден!`;
   }
-  createUser(user) {
-    this.#users.push(user);
+  async createUser(user) {
+    await this.getUsers();
+    this.#data.users.push(user);
+    writeFile.writeFile("src/db.json", this.#data, "Файл успешно записан.");
   }
-  editUser(id, body) {
-    let user = this.#users.find((item) => item.id == id);
+  async editUser(id, body) {
+    await this.getUsers();
+    let user = this.#data.users.find((item) => item.id == id);
     if (user) {
       user = Object.assign(user, body);
+      writeFile.writeFile("src/db.json", this.#data, "Данные пользователя обновлены.");
       return "Данные пользователя обновлены";
     }
     return `Пользователь с id ${id} не найден!`;
   }
-  changePassword(id, password) {
-    const user = this.#users.find((item) => item.id == id);
-    if (user) {
-      user.password = password;
-      return "Данные пользователя обновлены";
-    }
-    return `Пользователь с id ${id} не найден!`;
-  }
-  deleteUser(id) {
-    const index = this.#users.indexOf((item) => item.id == id);
-    if (index != -1) {
-      return `Пользователь с id ${id} не найден!`;
-    }
-    this.#users.splice(index, 1);
+  async deleteUser(id) {
+    await this.getUsers();
+    this.#data.users = this.#data.users.filter((item) => item.id != id);
+    await writeFile.writeFile(
+      "src/db.json",
+      this.#data,
+      "Пользователь удален!"
+    );
     return "Пользователь удален!";
-   
   }
 }
 
