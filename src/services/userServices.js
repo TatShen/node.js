@@ -1,4 +1,4 @@
-const writeFile = require("../utils/file");
+const fileHelpers = require("../helpers/fileHelpers");
 
 const dataService = require("./dataServices");
 
@@ -19,14 +19,14 @@ class UserServices {
   async createUser(user) {
     await this.getUsers();
     this.#data.users.push(user);
-    writeFile.writeFile("src/db.json", this.#data, "Файл успешно записан.");
+    fileHelpers.writeFile("src/db.json", this.#data, "Файл успешно записан.");
   }
   async editUser(id, body) {
     await this.getUsers();
     let user = this.#data.users.find((item) => item.id == id);
     if (user) {
       user = Object.assign(user, body);
-      writeFile.writeFile("src/db.json", this.#data, "Данные пользователя обновлены.");
+      fileHelpers.writeFile("src/db.json", this.#data, "Данные пользователя обновлены.");
       return "Данные пользователя обновлены";
     }
     return `Пользователь с id ${id} не найден!`;
@@ -34,7 +34,7 @@ class UserServices {
   async deleteUser(id) {
     await this.getUsers();
     this.#data.users = this.#data.users.filter((item) => item.id != id);
-    await writeFile.writeFile(
+    await fileHelpers.writeFile(
       "src/db.json",
       this.#data,
       "Пользователь удален!"

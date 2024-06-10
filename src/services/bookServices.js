@@ -1,4 +1,4 @@
-const writeFile = require("../utils/file");
+const fileHelpers = require("../helpers/fileHelpers");
 
 const dataService = require("./dataServices");
 
@@ -19,14 +19,14 @@ class BookServices {
   async createBook(book) {
     await this.getBooks();
     this.#data.books.push(book);
-    writeFile.writeFile("src/db.json", this.#data, "Файл успешно записан.");
+    fileHelpers.writeFile("src/db.json", this.#data, "Файл успешно записан.");
   }
   async editBook(id, body) {
     await this.getBooks();
     let book = this.#data.books.find((item) => item.id == id);
     if (book) {
       book = Object.assign(book, body);
-      writeFile.writeFile("src/db.json", this.#data, "Данные книги обновлены.");
+      fileHelpers.writeFile("src/db.json", this.#data, "Данные книги обновлены.");
       return "Данные книги обновлены";
     }
     return `Книга с id ${id} не найдена!`;
@@ -34,11 +34,7 @@ class BookServices {
   async deleteBook(id) {
     await this.getBooks();
     this.#data.books = this.#data.books.filter((item) => item.id != id);
-    await writeFile.writeFile(
-      "src/db.json",
-      this.#data,
-      "Книга удалена!"
-    );
+    await fileHelpers.writeFile("src/db.json", this.#data, "Книга удалена!");
     return "Книга удалена!";
   }
 }
