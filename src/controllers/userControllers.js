@@ -9,7 +9,7 @@ class UserControllers {
         .status(400)
         .json({ errors: errors.array().map((item) => item.msg) });
     }
-    const result = await userServices.login(req.body, res);
+     await userServices.login(req.body, res);
    
   }
   async register(req, res) {
@@ -19,7 +19,7 @@ class UserControllers {
         .status(400)
         .json({ errors: errors.array().map((item) => item.msg) });
     }
-    const result = await userServices.register(req.body, res);
+    await userServices.register(req.body, res);
    
   }
 }

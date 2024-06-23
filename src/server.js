@@ -3,14 +3,10 @@ require('dotenv').config();
 const express = require("express");
 const app = express();
 const routes = require("./routes/index")
-
+const loggerMiddleware = require("./middleware/loggerMiddleware")
 
 app.use(express.json())
 
-function loggerMiddleware(req, res, next) {
-  console.log(`Запрос по адресу: ${req.url}, метод ${req.method}`);
-  next(); 
-}
 
 app.use(loggerMiddleware)
 app.use('/api', routes)

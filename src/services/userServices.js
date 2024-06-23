@@ -23,7 +23,7 @@ class UserServices {
         return res.status(401).json({ message: "Неверный email или пароль" });
       }
 
-      const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY, {
+      const token = jwt.sign({ userId: user.id }, process.env.SECRET_KEY, {
         expiresIn: "2h",
       });
       res.send(token);
