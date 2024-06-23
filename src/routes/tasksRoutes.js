@@ -8,19 +8,40 @@ const {validateId, validateBodyTask} = require("./validate")
  * @swagger
  * /api/todos/:
  *   get:
- *     summary: Получить список задач
- *     description: Получение списка своих задач из базы данных.
+ *     summary: Получить список задач пользователя
+ *     description: Получение списка задач из базы данных 
  *     tags:
  *       - Todos
  *     security:
- *       - bearerAuth: []
+ *       - bearerAuth: [] 
  *     responses:
- *       200:
- *         description: Массив задач
  *       401:
  *         description: Пользователь не авторизован!
+ *       500:
+ *          description: Внутренняя ошибка сервера. Пожалуйста, попробуйте повторить запрос позже.
+ *       200:
+ *         description: Массив тасок
+ *         content:
+ *           application/json:
+ *             schema: 
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Task' 
+ *       
+ * components:
+ *   schemas:
+ *     Task:
+ *       type: object
+ *       properties:
+ *         id:
+ *           type: string
+ *         idUser:
+ *           type: string
+ *         title:
+ *           type: string
+ *         isCompleted:
+ *           type: boolean
  */
-
 router.get("/", tasksControllers.getTasks)
 
 /**

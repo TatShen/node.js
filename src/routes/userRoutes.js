@@ -53,7 +53,11 @@ router.post("/register",validateBodyUser, userControllers.register)
  *        $ref: "#/components/requestBodies/Users"
  *      responses:
  *        200:
- *          description: token
+ *          description: Пользователь выполнил вход в приложение
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: string
  *        401:
  *          description: Неверный email или пароль!
  *        500:
