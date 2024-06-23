@@ -27,7 +27,7 @@ class UserServices {
       res.send("Задача добавлена!");
     } catch (error) {
       console.error(error);
-      res.status(500).json({ message: "Ошибка записи!" });
+      res.status(500).json({ message: "Внутренняя ошибка сервера. Пожалуйста, попробуйте повторить запрос позже." });
     }
   }
   async editTask(req, res) {
@@ -47,7 +47,7 @@ class UserServices {
       }
     } catch (error) {
       console.error(error);
-      res.status(500).json({ message: "Ошибка записи!" });
+      res.status(500).json({ message: "Внутренняя ошибка сервера. Пожалуйста, попробуйте повторить запрос позже." });
     }
   }
   async editTaskStatus(req, res) {
@@ -67,7 +67,7 @@ class UserServices {
       }
     } catch (error) {
       console.error(error);
-      res.status(500).json({ message: "Ошибка записи!" });
+      res.status(500).json({ message: "Внутренняя ошибка сервера. Пожалуйста, попробуйте повторить запрос позже." });
     }
   }
   async deleteTask(req, res) {
@@ -80,7 +80,7 @@ class UserServices {
       res.send("Задача удалена!");
     } catch (error) {
       console.error(error);
-      res.status(500).json({ message: "Ошибка записи!" });
+      res.status(500).json({ message: "Внутренняя ошибка сервера. Пожалуйста, попробуйте повторить запрос позже." });
     }
   }
 }
