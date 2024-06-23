@@ -1,5 +1,8 @@
-const fileHelpers = require("../helpers/fileHelpers");
+const { v4: uuidv4 } = require("uuid");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
+const fileHelpers = require("../helpers/fileHelpers");
 const dataService = require("./dataServices");
 
 class UserServices {
@@ -11,35 +14,43 @@ class UserServices {
     return this.#data.users;
   }
 
-  async getUser(id) {
+  async login({ email, password }, res) {
     await this.getUsers();
-    const user = this.#data.users.find((item) => item.id == id);
-    return user ? user : `Пользователь с id ${id} не найден!`;
-  }
-  async createUser(user) {
-    await this.getUsers();
-    this.#data.users.push(user);
-    fileHelpers.writeFile("src/db.json", this.#data, "Файл успешно записан.");
-  }
-  async editUser(id, body) {
-    await this.getUsers();
-    let user = this.#data.users.find((item) => item.id == id);
-    if (user) {
-      user = Object.assign(user, body);
-      fileHelpers.writeFile("src/db.json", this.#data, "Данные пользователя обновлены.");
-      return "Данные пользователя обновлены";
+    try {
+      const user = this.#data.users.find((item) => item.email === email);
+      const isPasswordValid = await bcrypt.compare(password, user.password);
+      if (!user || !isPasswordValid) {
+        return res.status(401).json({ message: "Неверный email или пароль" });
+      }
+
+      const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY, {
+        expiresIn: "2h",
+      });
+      res.send(token);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Ошибка входа в систему" });
     }
-    return `Пользователь с id ${id} не найден!`;
   }
-  async deleteUser(id) {
+
+  async register({ email, password }, res) {
     await this.getUsers();
-    this.#data.users = this.#data.users.filter((item) => item.id != id);
-    await fileHelpers.writeFile(
-      "src/db.json",
-      this.#data,
-      "Пользователь удален!"
-    );
-    return "Пользователь удален!";
+    try {
+      if (this.#data.users.find((item) => item.email === email)) {
+        return res
+          .status(400)
+          .json({ message: "Пользователь с таким email уже существует" });
+      }
+      const id = uuidv4();
+      const saltRounds = 10;
+      const hashedPassword = await bcrypt.hash(password, saltRounds);
+      this.#data.users.push({ id, email, password: hashedPassword });
+      fileHelpers.writeFile("src/db.json", this.#data, "Файл успешно записан.");
+      res.send("Пользователь успешно зарегистрирован!");
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Ошибка регистрации пользователя" });
+    }
   }
 }
 
