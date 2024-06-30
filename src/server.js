@@ -14,7 +14,9 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use(loggerMiddleware)
 app.use('/api', routes)
-
+app.get("/", (req, res) => {
+  res.send("Hello everyone!");
+});
 Sentry.setupExpressErrorHandler(app);
 
 const PORT = process.env.PORT;
