@@ -19,6 +19,8 @@
   },
   "homepage": "https://github.com/TatShen/node.js#readme",
   "dependencies": {
+    "@sentry/node": "^8.13.0",
+    "@sentry/profiling-node": "^8.13.0",
     "bcrypt": "^5.1.1",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",

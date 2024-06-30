@@ -1,8 +1,8 @@
 const { v4: uuidv4 } = require("uuid");
-
+const Sentry = require("@sentry/node");
 const fileHelpers = require("../helpers/fileHelpers");
 const dataService = require("./dataServices");
-const { deleteTask } = require("../controllers/tasksControllers");
+
 
 class UserServices {
   #data;
@@ -26,8 +26,7 @@ class UserServices {
       fileHelpers.writeFile("src/db.json", this.#data, "Файл успешно записан.");
       res.send("Задача добавлена!");
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: "Внутренняя ошибка сервера. Пожалуйста, попробуйте повторить запрос позже." });
+      Sentry.captureException(error);
     }
   }
   async editTask(req, res) {
@@ -46,8 +45,7 @@ class UserServices {
         res.send(`Задача с id ${req.params.id} не найдена!`);
       }
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: "Внутренняя ошибка сервера. Пожалуйста, попробуйте повторить запрос позже." });
+      Sentry.captureException(error);
     }
   }
   async editTaskStatus(req, res) {
@@ -66,8 +64,7 @@ class UserServices {
         res.send(`Задача с id ${req.params.id}} не найдена!`);
       }
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: "Внутренняя ошибка сервера. Пожалуйста, попробуйте повторить запрос позже." });
+      Sentry.captureException(error);
     }
   }
   async deleteTask(req, res) {
@@ -79,8 +76,7 @@ class UserServices {
       fileHelpers.writeFile("src/db.json", this.#data, "Файл успешно записан.");
       res.send("Задача удалена!");
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: "Внутренняя ошибка сервера. Пожалуйста, попробуйте повторить запрос позже." });
+      Sentry.captureException(error);
     }
   }
 }
