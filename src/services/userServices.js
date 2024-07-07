@@ -26,7 +26,7 @@ class UserServices {
       const token = jwt.sign({ userId: user.id }, process.env.SECRET_KEY, {
         expiresIn: "2h",
       });
-      res.send(token);
+      res.send(JSON.stringify({"access_token": token}));
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: "Ошибка входа в систему" });

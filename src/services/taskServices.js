@@ -15,7 +15,7 @@ class UserServices {
   async getTasks(req, res) {
     await this.getData();
     const tasks = this.#data.tasks.filter((item) => item.idUser === req.userId);
-    res.send(tasks.length > 0 ? tasks : "У Вас еще нет задач!");
+    res.send(tasks.length > 0 ? tasks : []);
   }
 
   async createTask(req, res) {
